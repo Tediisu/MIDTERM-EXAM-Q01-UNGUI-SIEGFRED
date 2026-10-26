@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Gundam Freedom",
+    "price": 2790
+  },
+  {
+    "id": 2,
+    "name": "Gundam Barbatos",
+    "price": 2790
+  },
+  {
+    "id": 3,
+    "name": "Gundam RX78-2",
+    "price": 1890
+  },
+  {
+    "id": 4,
+    "name": "Gundam Exia",
+    "price": 2290
+  },
+  {
+    "id": 5,
+    "name": "Gundam Freedom-EX",
+    "price": 19990
+  }
+]

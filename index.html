@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toys</title>
+
+    <!-- <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 18px;
+            width: 280px;
+        }
+
+        button {
+            padding: 15px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        #message {
+            font-weight: bold;
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 40px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+            font-size: 18px;
+        }
+    </style> -->
+</head>
+
+<body>
+
+    <h1>Toy List</h1>
+    <h2>Add Toy</h2>
+
+    <form id="toyForm">
+        <input
+            type="text"
+            id="name"
+            placeholder="Name"
+            required
+        >
+
+        <input
+            type="text"
+            id="price"
+            placeholder="Price"
+            required
+        >
+        <button type="submit">Add Toy</button>
+    </form>
+    <form id="toyFormDelete">
+        <input
+            type="text"
+            id="name"
+            placeholder="Name"
+            required
+        >
+        <button type="submit">Delete Toy</button>
+    </form>
+
+    <p id="message"></p>
+
+    <h2>Gundams</h2>
+
+    <button id="loadToys">Load Gundam</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+
+        <tbody id="toyTableBody">
+        </tbody>
+    </table>
+
+
+    <script>
+        const toyForm = document.getElementById("toyForm");
+        const loadToyButton = document.getElementById("loadToys");
+        const toyTableBody = document.getElementById("toyTableBody");
+        const message = document.getElementById("message");
+
+
+        // Load all Toys
+        async function loadToys() {
+            try {
+                const response = await fetch("http://localhost:8000/api/toys");
+
+                if (!response.ok) {
+                    throw new Error("Failed to load toys");
+                }
+
+                const toy = await response.json();
+
+                toyTableBody.innerHTML = "";
+
+                toy.forEach(toy => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${toy.id}</td>
+                        <td>${toy.name}</td>
+                        <td>${toy.price}</td>
+     
+                    `;
+
+                    toyTableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error(error);
+                message.textContent = "Failed to load toys.";
+            }
+        }
+
+
+        // Add Toy
+        toyForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const price = document.getElementById("price").value;
+
+            try {
+                const response = await fetch("http://localhost:8000/api/toys", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        price: price,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Failed to add toy");
+                }
+
+                message.textContent = "Toy added successfully";
+
+                // Clear the form
+                toyForm.reset();
+
+                // Refresh movie list
+                loadToys();
+
+            } catch (error) {
+                console.error(error);
+                message.textContent = error.message;
+            }
+        });
+
+        toyFormDelete.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementsById("name").value;
+        })
+
+        loadToyButton.addEventListener("click", loadToys);
+
+    </script>
+
+</body>
+</html>
